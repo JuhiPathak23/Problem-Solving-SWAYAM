@@ -1,0 +1,39 @@
+//Question: https://atcoder.jp/contests/abc231/tasks/abc231_c
+
+//Code:
+#include <bits/stdc++.h>
+#include <vector>
+#include <algorithm>
+using namespace std;
+int main() {
+    int n, q;
+    cin >> n >> q;
+    vector<int> heights(n);
+    for (int i = 0; i < n; i++) {
+        cin >> heights[i];
+    }
+    vector<int> queries(q);
+    for (int i = 0; i < q; i++) {
+        cin >> queries[i];
+    }
+    sort(heights.begin(), heights.end());
+    for (int i = 0; i < q; i++) {
+        int idx=n,low=0, high = n-1;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (heights[mid] >= queries[i]) {
+                idx = mid;
+                high = mid - 1;
+            } else  low = mid + 1;
+        }
+        cout << n - idx << endl;
+    }
+    return 0;
+}
+
+//TC: O(Q*log N)
+
+//Approach: Read input values for the number of students (n), the number of queries (q), the heights of the students, and the query heights.
+//Sorted the heights in ascending order to facilitate binary search.
+//For each query, I performed binary search to find the index where the height is at least the query height.
+//Output was the number of students with a height of at least the query height.

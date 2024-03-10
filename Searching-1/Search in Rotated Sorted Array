@@ -22,6 +22,8 @@ public:
     }
 };
 
+//TC: O(log N)
+
 //Approach: Here I have used binary search to find a specific number in a sorted array. It's like searching for a number in a phone book, but this method is faster.
 //First, it sets up two markers at the beginning and end of the array to figure out where to start and stop searching.
 //Then, it keeps dividing the array in half and checks if the middle number is the one we're looking for. If it is, great! It tells us where it was found.

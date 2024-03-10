@@ -1,0 +1,20 @@
+//Question: https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/description/
+
+//Code:
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+        int low=0,high=nums.size()-1;
+        int mid=(low+high)/2 ; 
+        while(low<high){
+            if(nums[mid]>nums[high])    low=mid+1; 
+            else    high=mid ; 
+           mid=(low+high)/2 ;
+        }       
+        return nums[low];
+    } 
+};
+
+//TC: O(log N)
+
+//Approach: Here I have used binary search approach as well.

@@ -1,0 +1,36 @@
+//Question: https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/description/
+
+//Code:
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+        vector<int>res;
+        res.push_back(-1);
+        res.push_back(-1);
+        int low=0,high=nums.size()-1;
+        while(low<=high){
+            int mid=(low+high)/2;
+            if(nums[mid]==target){
+                high=mid-1;
+                res[0]=mid;
+            }
+            else if(nums[mid]<target) low=mid+1;
+            else    high=mid-1;
+        }
+        low=0,high=nums.size()-1;
+         while(low<=high){
+            int mid=(low+high)/2;
+            if(nums[mid]==target){
+                low=mid+1 ;
+                res[1]=mid;
+            }
+            else if(nums[mid]<target) low=mid+1;
+            else    high=mid-1;
+        }
+        return res;
+    }
+};
+
+//TC: O(log N)
+
+//Approach: I have performed binary search twice- first for the leftmost occurrence and other for the rightmost occurrence

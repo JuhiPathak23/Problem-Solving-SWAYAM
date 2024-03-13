@@ -1,0 +1,32 @@
+//Question: https://leetcode.com/problems/search-in-rotated-sorted-array/description/
+
+//Code:
+class Solution {
+public:
+    bool solve(vector<int>& nums,int n,int mid){
+        int c=0;
+        for(int i=0; i<nums.size();i++){
+            if(nums[i]%mid==0) c+=(nums[i]/mid)-1;
+            else    c+=(nums[i]/mid);
+            if(c>n) return false;
+        }
+        if(c>n) return false;
+        return true;
+    }
+
+    int minimumSize(vector<int>& nums, int maxOperations) {
+        int low=1,high=INT_MAX,res=0,mid;
+        while(low<=high){
+            mid=low+(high-low)/2;
+            if(solve(nums,maxOperations,mid)){
+                high=mid-1;
+                res=mid;
+            }
+            else    low=mid+1;
+        }
+        return res;
+    }
+};
+//TC: O(N log(INT_MAX))-->O(N)
+
+//Approach: Binary Search approach

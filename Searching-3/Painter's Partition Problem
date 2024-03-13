@@ -1,0 +1,37 @@
+//Question: https://www.codingninjas.com/studio/problems/painter-s-partition-problem_1089557
+
+//Code:
+bool solve(vector<int> &v,int mid,int k){
+    int c=1,t=0;
+    for(int i=0;i<v.size();i++){
+        if(t+v[i]<=mid) t+=v[i];
+        else{
+            c++;
+            if(c>k|| v[i]>mid)    return false;
+            t=v[i];
+        }
+    }
+    return true;
+}
+
+int findLargestMinDistance(vector<int> &boards, int k)
+{
+    //    Write your code here.
+    int low=0,res=-1,total=0;
+    for(int i=0;i<boards.size();i++) total+=boards[i];
+    int high=total;
+    int mid=(low+high)/2;
+    while(low<=high){
+        mid=(low+high)/2;
+        if(solve(boards,mid,k)){
+            res=mid;
+            high=mid-1;
+        }
+        else low=mid+1;
+    }
+    return res;
+}
+
+//TC: O(N log (high-low))
+
+//Approach: Binary Search

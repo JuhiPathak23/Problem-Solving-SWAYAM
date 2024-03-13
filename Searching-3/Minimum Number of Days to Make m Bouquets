@@ -1,0 +1,40 @@
+//Question: https://leetcode.com/problems/minimum-number-of-days-to-make-m-bouquets/description/
+
+//Code:
+class Solution {
+public:
+    int solve(int mid,int x,vector<int>&bloomDay){
+        int n=bloomDay.size(),s=0,t=0;
+        for(int i=0;i<n;i++){
+            if(mid>=bloomDay[i]){
+                t++;
+                if(t==x){
+                    s++;
+                    t=0;
+                }
+            }
+            else t=0;
+       }
+       return s;
+   }
+
+    int minDays(vector<int>& bloomDay, int m, int k) {
+        int n=bloomDay.size();
+        if(m> n/k)   return -1;
+        int low=1,high=INT_MIN,res=INT_MAX,mid;
+        for(int k=0;k<n;k++)    high=max(high,bloomDay[k]);
+        while(low<=high){
+            mid=(low+high)/2;
+            if(solve(mid,k,bloomDay)>=m){
+               res=min(res,mid);
+               high=mid-1;
+            }
+            else low=mid+1;
+        }
+        return low;
+    }
+};
+
+//TC: O(N log (high - low))
+
+//Approach: Binary Search

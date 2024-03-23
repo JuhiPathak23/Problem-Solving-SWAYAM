@@ -1,0 +1,30 @@
+//Question: https://www.geeksforgeeks.org/find-the-nth-term-divisible-by-a-or-b-or-c/
+
+//Code:
+class Solution{
+public:
+    
+    int gcd(int a, int b){
+	      if(a==0)  return b;
+	      return gcd(b % a, a);
+    }
+    int lcm(int a, int b){
+	      return (a * b) / gcd(a, b);
+    }
+    int count(int a,int b,int c,int n){
+	      return ((n/a) + (n/b) + (n/c)- (n/lcm(a,b))- (n/lcm(b,c))- (n/lcm(a,c))+ (n/lcm(a,lcm(b,c))));
+    }
+    int findNthTerm(int a,int b,int c,int n){
+	      int low=1,high=INT_MAX;
+	      while(low<high){
+		        int mid=(low+high)/2;
+		        if(count(a,b,c,mid)<n)  low=mid+1;
+		        else  high=mid;
+	      }
+	      return low;
+    }
+};
+
+//TC: O(n)
+
+//Approach: Binary Search

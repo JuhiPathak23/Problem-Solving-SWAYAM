@@ -1,0 +1,20 @@
+//Question: https://www.codingninjas.com/studio/problems/left-view-of-binary-tree_625707
+
+//Code:
+void solve(BinaryTreeNode<int>* root,vector<int> &v,int l){
+    if(root==NULL)    return;
+    if(l==v.size()) v.push_back(root->data);
+    solve(root->left,v,l+1);
+    solve(root->right,v,l+1);
+}
+
+vector<int> printLeftView(BinaryTreeNode<int>* root) {
+    // Write your code here.
+    vector<int>res;
+    solve(root,res,0);
+    return res;
+}
+
+//TC: O(n)
+
+//Approach: Recursive Tree Traversal

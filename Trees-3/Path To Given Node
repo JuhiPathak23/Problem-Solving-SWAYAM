@@ -1,0 +1,31 @@
+//Question: https://www.interviewbit.com/problems/path-to-given-node/
+
+//Code:
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+bool func(vector<int> &v,TreeNode* root,int x){
+    if(!root) return false;
+    v.push_back(root->val);
+    if(root->val==x) return true;
+    if(func(v,root->left,x) || func(v,root->right,x)) return true;
+    v.pop_back();
+    return false;
+}
+
+vector<int> Solution::solve(TreeNode* A, int B) {
+    vector<int>res;
+    if(A==NULL) return res;
+    func(res,A,B);
+    return res;
+}
+
+//TC: O(n)
+
+//Approach: DFS

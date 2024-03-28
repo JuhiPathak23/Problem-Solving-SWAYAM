@@ -1,0 +1,17 @@
+//Question: https://www.geeksforgeeks.org/problems/odd-even-level-difference/1?itm_source=geeksforgeeks&itm_medium=article&itm_campaign=bottom_sticky_on_article
+
+//Code:
+class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        if(root==NULL)  return 0;
+        int ld=maxDepth(root->left);
+        int rd=maxDepth(root->right);
+        int ht=max(ld,rd);
+        return ht+1;
+    }
+};
+
+//TC: O(n)
+
+//Approach: Recursion

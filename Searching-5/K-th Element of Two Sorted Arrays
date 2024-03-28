@@ -1,0 +1,33 @@
+//Question: https://www.codingninjas.com/studio/problems/k-th-element-of-2-sorted-array_1164159
+
+//Code:
+int kthElement(vector<int> &arr1, vector<int>& arr2, int n, int m, int k){
+    // Write your code here
+    int i=0,j=0; 
+    while(i<n && j<m){
+        if(k==1)    return min(arr1[i],arr2[j]); 
+        if(arr1[i]<arr2[j]){ 
+            i++;  
+            k--; 
+        }
+        else{
+            j++; 
+            k--; 
+        } 
+    }
+    while(i<n){
+        if(k==0)    return arr1[i]; 
+        i++; 
+        k--; 
+    }
+    while(j<m){
+        if(k==0)   return arr1[i]; 
+        j++;  
+        k--;
+    }
+    return -1; 
+}
+
+//TC: O(n+m)
+
+//Approach: Two-pointer approach

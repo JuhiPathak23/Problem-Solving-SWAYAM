@@ -1,0 +1,16 @@
+//Question: https://www.geeksforgeeks.org/check-if-each-internal-node-of-a-bst-has-exactly-one-child/
+
+//Code:
+bool hasOnlyOneChild(int pre[], int size){
+  int nps,lps;
+  for (int i=0; i<size-1; i++){
+    nps= pre[i] - pre[i+1];
+    lps= pre[i] - pre[size-1];
+    if (nps*lps < 0)  return false;;
+  }
+  return true;
+}
+
+//TC: O(n)
+
+//Approach: Preorder Traversal (nps=next preorder successor, lps= last preorder successor)

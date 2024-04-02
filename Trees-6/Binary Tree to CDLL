@@ -1,0 +1,33 @@
+//Question: https://www.geeksforgeeks.org/problems/binary-tree-to-cdll/1
+
+//Code:
+class Solution
+{
+  public:
+    //Function to convert binary tree into circular doubly linked list.
+    Node *head=NULL, *prev=NULL;
+    void solve(Node* root){
+        if(root==NULL)return;
+        solve(root->left);
+        if(prev==NULL)  head=root;
+        else{
+            root->left=prev;
+            prev->right=root;
+        }
+        prev=root;
+        solve(root->right);
+        prev->right=head;
+        head->left=prev;
+    }
+    Node *bTreeToCList(Node *root)
+    {
+    //add code here.
+        if(root==NULL)  return NULL;
+        solve(root);
+        return head;
+    }
+};
+
+//TC: O(n)
+
+//Approach: Inorder traversal

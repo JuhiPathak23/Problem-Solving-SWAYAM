@@ -1,7 +1,43 @@
 //Question: https://www.geeksforgeeks.org/problems/min-distance-between-two-given-nodes-of-a-binary-tree/1
 
 //Code:
-need to visit later 
-//TC: 
+/* A binary tree node
+struct Node
+{
+    int data;
+    Node* left, * right;
+}; */
 
-//Approach: 
+class Solution{
+    public:
+    /* Should return minimum distance between a and b
+    in a tree with given root*/
+    Node* lca(Node*root,int a,int b){
+        if(root==NULL)  return NULL;
+        if(root->data==a || root->data==b)  return root;
+        Node* l=lca(root->left,a,b);
+        Node* r=lca(root->right,a,b);
+        if(l && r) return root;
+        if(l) return l;
+        return r;
+    }
+    int solve(Node* root,int &key){
+        if(root==NULL)  return NULL;
+        if(root->data==key) return 1;
+        int x=solve(root->left,key);
+        int y=solve(root->right,key);
+        if(!x && !y)    return 0;
+        else    return x+y+1;
+    }
+    int findDist(Node* root, int a, int b) {
+        // Your code here
+        Node* ans=lca(root,a,b);
+        int n1=solve(ans,a);
+        int n2=solve(ans,b);
+        return n1+n2-2;
+    }
+};
+
+//TC: O(n)
+
+//Approach: Finding LCA

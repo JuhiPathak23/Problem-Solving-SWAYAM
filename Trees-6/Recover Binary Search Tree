@@ -1,0 +1,28 @@
+//Question: https://leetcode.com/problems/recover-binary-search-tree/description/
+
+//Code:
+class Solution {
+public:
+    TreeNode* t1;
+    TreeNode* t2;
+    TreeNode* t3;
+    void inorder(TreeNode* root){
+        if(root==NULL) return;
+        inorder(root->left);
+        if(t3 && t3->val>root->val){
+            if(!t1) t1=t3;
+            t2=root;
+        }
+        t3=root;
+        inorder(root->right);
+    }
+    void recoverTree(TreeNode* root) {
+        t1=t2=t3=NULL;
+        inorder(root);
+        swap(t1->val,t2->val);
+    }
+};
+
+//TC: O(n)
+
+//Approach: Inorder Traversal

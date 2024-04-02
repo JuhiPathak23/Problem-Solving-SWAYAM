@@ -1,0 +1,76 @@
+//Question: https://www.naukri.com/code360/problems/boundary-traversal-of-binary-tree_790725
+
+//Code:
+/************************************************************
+
+    Following is the Binary Tree node structure:
+
+    template <typename T>
+    class TreeNode
+    {
+    public:
+        T data;
+        TreeNode<T> *left;
+        TreeNode<T> *right;
+
+        TreeNode(T data)
+        {
+            this -> data = data;
+            left = NULL;
+            right = NULL;
+        }
+
+        ~TreeNode()
+        {
+            if(left)
+                delete left;
+            if(right)
+                delete right;
+        }
+    };
+
+************************************************************/
+bool checkleaf(TreeNode<int> *root){
+    return (!root->left) && (!root->right);
+}
+void leftboundary(TreeNode<int> *root,vector<int> &res){
+    TreeNode<int> *cur=root->left;
+    while(cur){
+        if(!checkleaf(cur)) res.push_back(cur->data);
+        if(cur->left)   cur=cur->left;
+        else    cur=cur->right;
+    }
+}
+void rightboundary(TreeNode<int> *root,vector<int> &res){
+    TreeNode<int> *cur=root->right;
+    vector<int>right;
+    while(cur){
+        if(!checkleaf(cur)) right.push_back(cur->data);
+        if(cur->right)   cur=cur->right;
+        else    cur=cur->left;
+    }
+    for(int i=right.size()-1;i>=0;i--)  res.push_back(right[i]);
+}
+
+void makeleaf(TreeNode<int> *root,vector<int> &res){
+    if (checkleaf(root)) {
+        res.push_back(root->data);
+        return;
+    }
+    if(root->left)  makeleaf(root->left,res);
+    if(root->right) makeleaf(root->right,res);
+}
+vector<int> traverseBoundary(TreeNode<int> *root)
+{
+	// Write your code here.
+    vector<int>res;
+    if(root==NULL)  return res;
+    if(!checkleaf(root))    res.push_back(root->data);
+    leftboundary(root,res);
+    makeleaf(root,res);
+    rightboundary(root,res);
+}
+
+//TC: O(n)
+
+//Approach: Recursive Traversal

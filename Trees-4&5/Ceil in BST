@@ -1,0 +1,24 @@
+//Question: https://www.geeksforgeeks.org/problems/implementing-ceil-in-bst/1
+
+//Code:
+// Function to return the ceil of given number in BST.
+int findCeil(Node* root, int input) {
+    if (root == NULL) return -1;
+
+    // Your code here
+    int res=-1;
+    Node* cur=root;
+    while(cur!=NULL){
+        if(input==cur->data)    return cur->data;
+        else if(input>cur->data)    cur=cur->right;
+        else{
+            res=cur->data;
+            cur=cur->left;
+        }
+    }
+    return res;
+}
+
+//TC: O(h)
+
+//Approach: Iterative

@@ -1,0 +1,36 @@
+//Question: https://www.geeksforgeeks.org/problems/print-common-nodes-in-bst/1
+
+//Code:
+class Solution
+{
+    public:
+    //Function to find the nodes that are common in both BST. 
+    void solvein(Node* root,vector<int> &v){
+        if(root==NULL)  return;
+        solvein(root->left,v);
+        v.push_back(root->data);
+        solvein(root->right,v);
+    }
+    vector <int> findCommon(Node *root1, Node *root2)
+    {
+     //Your code here
+        vector<int>bst1,bst2,res;
+        if(root1==NULL || root2==NULL) return res;
+        solvein(root1,bst1);
+        solvein(root2,bst2);
+        int i=0,j=0;
+        while(i<bst1.size() && j<bst2.size()){
+            if(bst1[i]==bst2[j]){
+                res.push_back(bst1[i]);
+                i++;j++;
+            }
+            else if(bst1[i]<bst2[j])    i++;
+            else    j++;
+        }
+        return res;
+    }
+};
+
+//TC: O(n1+n2)
+
+//Approach: Inorder traversal

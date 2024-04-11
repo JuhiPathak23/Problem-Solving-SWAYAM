@@ -1,0 +1,59 @@
+//Question: https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/description/
+
+//Code:
+struct trie{
+    trie* t[2];
+    trie(){
+        t[0]=NULL;
+        t[1]=NULL;
+    }
+};
+class TrieNode{
+    private:
+        trie* root;
+    public:
+        TrieNode(){
+            root=new trie();
+        }
+    
+    void insert(int num){
+        trie* cur=root;
+        for(int i=31;i>=0;i--){
+            int b=(num>>i)&1;
+            if(cur->t[b]==NULL) cur->t[b]=new trie();
+            cur=cur->t[b];
+        }
+    }
+    
+    int max_xor(int num){
+        trie* curr=root;
+        int res=0;
+        for(int i=31;i>=0;i--){
+            int b=(num>>i)&1;
+            if(curr->t[!b]){
+                res+=(1<<i);
+                curr=curr->t[!b];
+            }
+            else    curr=curr->t[b];
+        }
+        return res;
+    }   
+};
+class Solution {
+public:
+    int findMaximumXOR(vector<int>& nums) {
+        int n=nums.size(),res=0;
+        TrieNode* t=new TrieNode();
+        for(int i=0;i<n;i++){
+            t->insert(nums[i]);
+            res=max(res,t->max_xor(nums[i]));
+        }
+        return res;
+    }
+};
+
+//TC: O(n * m),  n=total number of integers in the input vector & m=number of bits required to represent the maximum integer
+
+//Approach: here, for each number, we insert its binary representation into the trie,
+//and then it calculates the maximum XOR value by traversing the trie based on
+//the bitwise complement of the current bit.

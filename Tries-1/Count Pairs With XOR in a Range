@@ -1,0 +1,57 @@
+//Question: https://leetcode.com/problems/count-pairs-with-xor-in-a-range/description/
+
+//Code:
+class Solution {
+    const int height=14;
+    class TreeNode{
+    public:
+        TreeNode* next[2];
+        int c;
+        TreeNode () {
+            next[0]=NULL;
+            next[1]=NULL;
+            c=0;
+        };
+    };
+
+    void insert(TreeNode* root, int n){
+        TreeNode* cur=root;
+        for(int j=height;j>=0;j--){
+            int i=((n>>j) & 1);
+            if(cur->next[i]==NULL)
+                cur->next[i]=new TreeNode();
+            cur=cur->next[i];
+            cur->c++;
+        }
+    }
+
+    int count(TreeNode* root,int n,int l){
+        TreeNode* cur=root;
+        int c=0;
+        for(int i=height;i>=0;i--){
+            int b=((n>>i) & 1);
+            int bl=((l>>i) & 1);
+            if(bl==1){
+                if(cur->next[b]!=NULL)  c+=cur->next[b]->c;
+                cur=cur->next[1-b];
+            }
+            else    cur=cur->next[b];
+            if(cur==NULL) break;
+        }
+        return c;
+    }
+public:
+    int countPairs(vector<int>& nums, int low, int high) {
+        TreeNode* root=new TreeNode();
+        int res=0;
+        for(int n:nums){
+            res+=count(root,n,high+1)-count(root,n,low);
+            insert(root,n);
+        }
+        return res;
+    }
+};
+
+//TC: o(n)
+
+//Approach: BITWISE TRIE :)

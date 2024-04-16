@@ -1,0 +1,41 @@
+//Question: https://leetcode.com/problems/number-of-provinces/description/
+
+//Code:
+class Solution {
+private:
+    void dfs(int start,vector<int>a[],vector<int>&v){
+        v[start]=1;
+        for(auto &it:a[start]){
+            if(!v[it]){
+                v[it]=1;
+                dfs(it,a,v);
+            }
+        }
+    }
+public:
+    int findCircleNum(vector<vector<int>>& isConnected) {
+        int n=isConnected.size();
+        vector<int>a[n+1];
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                if(isConnected[i][j]==1){
+                    a[i+1].push_back(j+1);
+                    a[j+1].push_back(i+1);
+                }
+            }
+        }
+        vector<int>v(n+1,0);
+        int res=0;
+        for(int i=1;i<=n;i++){
+            if(!v[i]) {
+                dfs(i,a,v);
+                res++;
+            }
+        }
+        return res;
+    }
+};
+
+//TC: O(V+E+N^2)
+
+//Approach: DFS

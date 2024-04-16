@@ -1,0 +1,66 @@
+//Question: https://leetcode.com/problems/longest-common-suffix-queries/description/
+
+//Code:
+class Unit{
+public:
+    Unit *alph[26];
+    int i,k,l;
+    Unit(){
+        for(int i=0;i<26;i++){
+            alph[i]=NULL;
+        }
+        i=-1;
+        k=-1;
+        l=1e9;
+    }
+};
+
+class Trie {
+    Unit *root;
+public:
+    Trie() {
+        root = new Unit();
+    }
+    void insert(string &s, int x){
+        reverse(s.begin(), s.end());
+        auto p=root;
+        for(char c:s) {
+            if(!p->alph[c-'a']) p->alph[c-'a']=new Unit();
+            if(s.size()<p->l){
+                p->i=x;
+                p->l=s.size();
+            }
+            p=p->alph[c-'a'];
+        }
+        if(p->k==-1)    p->k=x;
+    }
+    int search(string &s){
+        reverse(s.begin(), s.end());
+        auto p=root;
+        for(char c:s){
+            if(!p->alph[c-'a']){
+                if(p->k!=-1)    return p->k;
+                return p->i;
+            }
+            p=p->alph[c-'a'];
+        }
+        if(p->k!=-1)    return p->k;
+        return p->i;
+    }
+};
+
+class Solution {
+public:
+    vector<int> stringIndices(vector<string>& wordsContainer, vector<string>& wordsQuery) {
+        Trie tr;
+        for(int i=0;i<wordsContainer.size();i++) tr.insert(wordsContainer[i],i);
+        vector<int>v(wordsQuery.size());
+        for(int i=0;i<v.size();i++)
+            v[i]=tr.search(wordsQuery[i]);
+        return v;
+    }
+};
+
+//TC: O(M * N); M=the total number of characters in all words in wordsContainer, N=the average length of the words
+
+//Approach: finding indices of words

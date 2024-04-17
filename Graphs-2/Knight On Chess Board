@@ -1,0 +1,33 @@
+//Question: https://www.interviewbit.com/problems/knight-on-chess-board/
+
+//Code:
+#define point pair<int, pair<int, int> >
+int Solution::knight(int A, int B, int C, int D, int E, int F) {
+    vector<vector<int>>v(A, vector<int> (B, 1000000));
+    v[C-1][D-1] = 0;
+    priority_queue<point, vector<point>, greater<point> > pq;
+    pq.push({0, {C-1, D-1}});    
+    int dx[8] = {1, 2, 2, 1, -1, -2, -2, -1};
+    int dy[8] = {2, 1, -1, -2, -2, -1, 1, 2};
+    while(!pq.empty()) {
+        point p = pq.top();
+        pq.pop();
+        pair<int, int> coord = p.second;
+        int x = coord.first, y = coord.second;
+        for(int i=0;i<8;i++){
+            int a=x+dx[i];
+            int b=y+dy[i];
+            if(a<0 || a>=A || b<0 || b>=B)  continue;
+            if(v[a][b]>v[x][y]+1){
+                v[a][b]=v[x][y]+1;
+                pq.push({v[a][b],{a,b}});
+            }
+        }
+    }
+    if(v[E-1][F-1]==1000000)    return -1;
+    return v[E-1][F-1];
+}
+
+//TC: O(M*N * log(M*N))
+
+//Approach: Use of Dijkstra's algorithm

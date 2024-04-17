@@ -1,7 +1,45 @@
 //Question: https://leetcode.com/problems/step-by-step-directions-from-a-binary-tree-node-to-another/description/
 
 //Code:
-need to visit later
-//TC: 
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    void dfs(TreeNode* root,int &sv,int &dv,string &s,string &e,string &t){
+        if(!root) return;
+        if(!s.empty() && !e.empty()) return;
+        if(root->val==sv) s=t;
+        if(root->val==dv) e=t;
+        t+='L';
+        dfs(root->left,sv,dv,s,e,t);
+        t.pop_back();
+        t+='R';
+        dfs(root->right,sv,dv,s,e,t);
+        t.pop_back();
+    }
+    string getDirections(TreeNode* root, int startValue, int destValue) {
+        string res="";
+        string s="",e="",t="";
+        dfs(root,startValue,destValue,s,e,t);
+        int i=0;
+        for(i=0;i<s.size() && i<e.size();i++){
+            if(s[i]!=e[i]) break;
+        }
+        res.append(s.size()-i,'U');
+        res+=e.substr(i);
+        return res;
+    }
+};
 
-//Approach: 
+//TC: O(n)
+
+//Approach: DFS

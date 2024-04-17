@@ -1,0 +1,21 @@
+//Question: https://leetcode.com/problems/minimum-number-of-vertices-to-reach-all-nodes/description/
+
+//Code:
+class Solution {
+public:
+    vector<int> findSmallestSetOfVertices(int n, vector<vector<int>>& edges) {
+        vector<int>res;
+        vector<int>v(n);
+        for(auto &x:edges)  v[x[1]]++;
+        for(int i=0;i<n;i++){
+            if(!v[i])   res.push_back(i);
+        }
+        return res;
+    }
+};
+
+//TC: O(E+N)
+
+//Approach: Simply find all the reachable nodes, the remaining ones will be the rquired nodes
+//needed to reach all of them. For example, this was the vector made for given examples:
+//v[_,1,2,_,1,1] and v[_,3,_,_,2]

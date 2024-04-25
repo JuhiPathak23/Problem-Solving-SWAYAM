@@ -1,0 +1,33 @@
+//Question: https://leetcode.com/problems/path-with-minimum-effort/description/
+
+//Code:
+class Solution {
+public:
+    int minimumEffortPath(vector<vector<int>>& heights) {
+        int m=heights.size(),n=heights[0].size();
+        vector<vector<int>>v(m,vector<int>(n,INT_MAX));
+        queue<pair<int,int>>q;
+        q.push({0, 0});
+        v[0][0]=0;
+        vector<vector<int>>dir={{-1,0},{1,0},{0,1},{0,-1}};
+        while(!q.empty()){
+            auto cur=q.front();
+            q.pop();
+            for(auto d:dir){
+                int r=cur.first + d[0];
+                int c=cur.second + d[1];
+                if(min(r,c)<0 || r>=m || c>=n)  continue;
+                int t= max(v[cur.first][cur.second],abs(heights[r][c]-heights[cur.first][cur.second]));
+                if(t<v[r][c]){
+                    v[r][c]=t;
+                    q.push({r,c});
+                }
+            }
+        }
+        return v[m-1][n-1];
+    }
+};
+
+//TC: O(m*n)
+
+//Approach:  BFS

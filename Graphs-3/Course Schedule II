@@ -1,0 +1,36 @@
+//Question: https://leetcode.com/problems/course-schedule-ii/description/
+
+//Code:
+class Solution {
+public:
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<vector<int>>v(numCourses);
+        vector<int>v2(numCourses, 0);
+        vector<int>res;
+        for(auto& i:prerequisites){
+            int c=i[0];
+            int p=i[1];
+            v[p].push_back(c);
+            v2[c]++;
+        }
+        queue<int>q;
+        for(int i=0;i<numCourses;i++){
+            if(v2[i]==0) q.push(i);
+        }
+        while(!q.empty()){
+            int f=q.front();
+            q.pop();
+            res.push_back(f);
+            for(int n:v[f]){
+                v2[n]--;
+                if(v2[n]==0)    q.push(n);
+            }
+        }
+        if(res.size()!=numCourses)  return vector<int>();
+        return res;
+    }
+};
+
+//TC: O(V+E)
+
+//Approach:  use of topological sorting approach using Kahn's algorithm here as well

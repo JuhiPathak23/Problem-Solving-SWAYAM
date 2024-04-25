@@ -1,0 +1,32 @@
+//Question: https://leetcode.com/problems/is-graph-bipartite/description/
+
+//Code:
+class Solution {
+public:
+    bool isBipartite(vector<vector<int>>& graph) {
+        vector<int>sets(graph.size(),-1);
+        auto bfs=[&](int i,int e){
+            queue<pair<int,int>>q;
+            q.push({i,e});
+            while(!q.empty()){
+                auto[node,e]=q.front();
+                q.pop();
+                if(sets[node]!=-1) continue;
+                sets[node]=e;
+                for(int adj:graph[node]){
+                    if(sets[adj]==e) return false;
+                    q.push({adj,1-e});
+                }
+            }
+            return true;
+        };
+        for(int i=0;i<graph.size();++i){
+            if(sets[i]==-1 && !bfs(i,0))    return false;
+        }
+        return true;
+    }
+};
+
+//TC: O(V+E)
+
+//Approach:  BFS

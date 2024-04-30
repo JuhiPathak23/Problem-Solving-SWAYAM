@@ -1,0 +1,46 @@
+//Question: https://leetcode.com/problems/largest-color-value-in-a-directed-graph/description/
+
+//Code:
+class Solution {
+public:
+    vector<int>adj[100005];
+    int d[100005];
+    int largestPathValue(string colors, vector<vector<int>>& edges) {
+        int i;
+        int n=colors.length();        
+        for (i=0; i<edges.size(); i++){
+            d[edges[i][1]]++;
+            adj[edges[i][0]].push_back(edges[i][1]);
+        }
+        vector<vector<int>> dp(n,vector<int> (26,0));
+        queue<int> q;
+        for (i=0; i<n; i++){
+            if (d[i]==0)
+                q.push(i);
+        }
+        int res=0;
+        while(!q.empty()){
+            int node=q.front();
+            q.pop();
+            dp[node][colors[node]-'a']++;
+            for (i=0; i<26; i++)
+                res=max(res,dp[node][i]);
+            for (auto it: adj[node]){
+                d[it]--;
+                if(d[it]==0)
+                    q.push(it);
+                for(i=0; i<26; i++)
+                    dp[it][i]=max(dp[it][i],dp[node][i]);
+            }
+        }
+        for(i=0;i<n;i++){
+            if(d[i]!=0)
+                return -1;
+        }      
+     return res;
+    }
+};
+
+//TC: O(V+E)
+
+//Approach: Topological sorting with DP

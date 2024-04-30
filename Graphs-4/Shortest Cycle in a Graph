@@ -1,0 +1,40 @@
+//Question: https://leetcode.com/problems/shortest-cycle-in-a-graph/description/
+
+//Code:
+class Solution {
+public:
+    int findShortestCycle(int n, vector<vector<int>>& edges) {
+        int res=INT_MAX;
+        vector<int>v[10000];
+        for(auto e:edges){
+            v[e[0]].push_back(e[1]);
+            v[e[1]].push_back(e[0]);
+        }
+        for(int i=0;i<n;i++){
+            vector<int>t1(n,(int)(1e9));
+            vector<int>t2(n,-1);
+            t1[i]=0;
+            queue<int>q;
+            q.push(i);
+            while (!q.empty()) {
+                int f=q.front();
+                q.pop();
+                for(int e:v[f]){
+                    if(t1[e]==(int)(1e9)){
+                        t1[e]=1+t1[f];
+                        t2[e]=f;
+                        q.push(e);
+                    }
+                    else if(t2[f]!=e and t2[e]!=f)    res=min(res,t1[f]+t1[e]+1);
+                }
+            }
+        }
+        if(res==INT_MAX) return -1;
+        else    return res;
+    }
+};
+
+
+//TC: O(V+E)
+
+//Approach: BFS

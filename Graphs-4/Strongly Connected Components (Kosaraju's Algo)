@@ -1,0 +1,51 @@
+//Question: https://www.geeksforgeeks.org/problems/strongly-connected-components-kosarajus-algo/1
+
+//Code:
+class Solution
+{
+	public:
+	
+	void dfs(int node,vector<bool> &vis,vector<vector<int>>& adj,stack<int> &s){
+        vis[node]=true;
+        for(auto x:adj[node]){
+            if(vis[x]==false)   dfs(x,vis,adj,s);
+        }
+        s.push(node);
+    }
+    
+    void solve(int node,vector<bool> &vis,vector<vector<int>> &t){
+        vis[node]=true;
+        for(auto x:t[node]){
+            if(!vis[x]) solve(x,vis,t);
+        }
+    }
+	//Function to find number of strongly connected components in the graph.
+    int kosaraju(int V, vector<vector<int>>& adj)
+    {
+        //code here
+        vector<bool>vis(V,false);
+        stack<int>s;
+        for(int i=0;i<V;i++){
+           if(!vis[i])  dfs(i,vis,adj,s);
+        }
+        vector<vector<int>>t(V);
+        for(int i=0;i<V;i++){
+            vis[i]=false;
+            for(auto X:adj[i])  t[X].push_back(i);
+        }
+        int count=0;
+        while(!s.empty()){
+            int top=s.top();
+            s.pop();
+            if(vis[top]==false){
+                count++;
+                solve(top,vis,t);
+            }
+        }
+        return count;
+    }
+};
+
+//TC: O(V+E)
+
+//Approach: DFS

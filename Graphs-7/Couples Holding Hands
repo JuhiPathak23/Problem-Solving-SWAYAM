@@ -1,0 +1,50 @@
+//Question: https://leetcode.com/problems/couples-holding-hands/description/
+
+//Code:
+class Solution {
+public:
+    int minSwapsCouples(vector<int>& row) {
+        int n=row.size();
+        int swaps=0;
+		vector<int>v(n);
+		vector<int>res;
+		int parent=1;
+		map<int,vector<int>>mp;
+		for(int i=0;i<v.size();i+=2){
+			v[i]=parent;
+			v[i+1]=parent;
+			parent++;
+		}
+		int index=0;
+		for(int i=0;i<row.size();i+=2){
+			int ui=row[i];
+			int vi=row[i+1];
+			if(v[ui]!=v[vi]){
+				res.push_back(v[ui]);
+				res.push_back(v[vi]);
+                mp[v[ui]].push_back(index);
+				mp[v[vi]].push_back(index+1);
+                index+=2; 
+			}
+		}
+		for(int i=0;i<res.size();i+=2){
+			if(res[i]!=res[i+1]){
+				swaps++;
+				int f=i+1;
+				int l=-1;
+				int val=res[i+1];
+				if(mp[res[i]][0]>i+1)   l=mp[res[i]][0];
+				else    l=mp[res[i]][1];
+				swap(res[f],res[l]);
+				if(mp[val][0]==i+1) mp[val][0]=l;
+				if(mp[val][1]==i+1)   mp[val][1]=l;
+			}
+			else    continue;
+		}
+		return swaps;
+	}
+};
+
+//TC: O(N)
+
+//Approach:  Greedy algorithm

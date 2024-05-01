@@ -1,0 +1,17 @@
+//Question: https://www.geeksforgeeks.org/given-array-three-numbers-maximize-x-ai-y-aj-z-ak/
+
+//Code:
+int maximizeExpr(int a[], int n, int x, int y, int z) { 
+	int L[n],R[n]; 
+  int res=INT_MIN;
+	L[0]=x*a[0]; 
+	for(int i=1;i<n;i++)  L[i]=max(L[i-1],a[i]*x); 
+	R[n-1]=z*a[n-1]; 
+	for(int i=n-2;i>=0;i--)  R[i]=max(R[i+1],a[i]*z); 
+	for(int i=0;i<n;i++) res=max(res,L[i]+y * R[i]+a[i]); 
+	return res; 
+} 
+
+//TC: O(N)
+
+//Approach:  DP

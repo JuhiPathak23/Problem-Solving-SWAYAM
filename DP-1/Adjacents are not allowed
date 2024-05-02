@@ -1,0 +1,22 @@
+//Question: https://www.geeksforgeeks.org/problems/adjacents-are-not-allowed3528/1
+
+//Code:
+class Solution{
+public:
+    int maxSum(int N, vector<vector<int>> mat)
+    {
+        // code here
+        int dp[N+1];
+        memset(dp,0,sizeof(dp));
+        dp[0]=0;
+        dp[1] = max(mat[0][0],mat[1][0]);
+        for(int i=2;i<=N;i++){
+            dp[i]=max(max(mat[0][i-1],mat[1][i-1])+dp[i-2],dp[i-1]);
+        }
+        return dp[N] ;
+    }
+};
+
+//TC: O(n)
+
+//Approach: DP

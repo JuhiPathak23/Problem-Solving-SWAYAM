@@ -1,0 +1,24 @@
+//Question: https://leetcode.com/problems/boats-to-save-people
+
+//Code:
+class Solution {
+public:
+    int numRescueBoats(vector<int>& people, int limit) {
+        sort(people.begin(),people.end());
+        int start=0,end=people.size()-1,c=0;
+        while(start<=end){
+            int wt=people[start]+people[end];
+            if(wt<=limit){
+                start++;
+                end--;
+            }
+            else if(wt>limit)   end--;
+            c++;
+        }
+        return c;
+    }
+};
+
+//TC: O(n* log n)
+
+//Approach:  Two pointers

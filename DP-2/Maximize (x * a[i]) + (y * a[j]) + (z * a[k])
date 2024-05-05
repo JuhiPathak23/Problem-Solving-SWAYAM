@@ -1,6 +1,66 @@
 //Question: https://www.geeksforgeeks.org/given-array-three-numbers-maximize-x-ai-y-aj-z-ak/
 
 //Code:
+1. RECURSION:
+
+#include <algorithm>
+#include <climits>
+
+int maximizeExprRec(int a[], int n, int x, int y, int z, int idx) {
+    if (idx == n) return INT_MIN;
+    int L = (idx > 0) ? x * a[idx] : INT_MIN;
+    int R = (idx < n - 1) ? z * a[idx] : INT_MIN;
+    int result = std::max({L + y * R + a[idx], maximizeExprRec(a, n, x, y, z, idx + 1)});
+    return result;
+}
+
+int maximizeExpr(int a[], int n, int x, int y, int z) {
+    return maximizeExprRec(a, n, x, y, z, 0);
+}
+____________________________________________________________
+2. MEMO:
+int maximizeExprMemo(int a[], int n, int x, int y, int z, int idx, vector<vector<int>>& memo) {
+    if (idx == n) return INT_MIN;
+    if (memo[idx][x] != INT_MIN) return memo[idx][x];
+    
+    int L = (idx > 0) ? x * a[idx] : INT_MIN;
+    int R = (idx < n - 1) ? z * a[idx] : INT_MIN;
+    int result = std::max({L + y * R + a[idx], maximizeExprMemo(a, n, x, y, z, idx + 1, memo)});
+    
+    return memo[idx][x] = result;
+}
+
+int maximizeExpr(int a[], int n, int x, int y, int z) {
+    vector<vector<int>> memo(n, vector<int>(x + 1, INT_MIN));
+    return maximizeExprMemo(a, n, x, y, z, 0, memo);
+}
+________________________________________________________________
+3. BOTTOM UP DP:
+#include <algorithm>
+#include <climits>
+
+int maximizeExprDP(int a[], int n, int x, int y, int z) {
+    int L[n], R[n];
+    L[0] = (n > 0) ? x * a[0] : INT_MIN;
+    R[n - 1] = (n > 0) ? z * a[n - 1] : INT_MIN;
+
+    for (int i = 1; i < n; i++)
+        L[i] = std::max(x * a[i], L[i - 1]);
+    for (int i = n - 2; i >= 0; i--)
+        R[i] = std::max(z * a[i], R[i + 1]);
+
+    int result = INT_MIN;
+    for (int i = 0; i < n; i++)
+        result = std::max(result, L[i] + y * R[i] + a[i]);
+
+    return result;
+}
+
+int maximizeExpr(int a[], int n, int x, int y, int z) {
+    return maximizeExprDP(a, n, x, y, z);
+}
+___________________________________________________________
+FIRST APPROACH:
 int maximizeExpr(int a[], int n, int x, int y, int z) { 
 	int L[n],R[n]; 
   int res=INT_MIN;

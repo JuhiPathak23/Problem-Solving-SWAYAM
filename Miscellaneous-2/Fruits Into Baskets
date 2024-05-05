@@ -1,0 +1,28 @@
+//Question: https://leetcode.com/problems/fruit-into-baskets/description/
+
+//Code:
+class Solution {
+public:
+    int totalFruit(vector<int>& fruits) {
+        unordered_map<int,int>basket;
+        int res=0;
+        int a=0;
+        for(int i=0;i<fruits.size();i++){
+            if(basket.size()==2 && basket.find(fruits[i])==basket.end()){
+                while(basket.size()==2){
+                    basket[fruits[a]]--;
+                    if(basket[fruits[a]]==0)
+                        basket.erase(fruits[a]);
+                    a++;
+                }
+            }
+            basket[fruits[i]]++;
+            res=max(res,i-a+1);
+        }
+        return res;
+    }
+};
+
+//TC: O(k^2)
+
+//Approach:  Sliding Window with Hashmap

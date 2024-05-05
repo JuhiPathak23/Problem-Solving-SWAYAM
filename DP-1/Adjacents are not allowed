@@ -1,6 +1,56 @@
 //Question: https://www.geeksforgeeks.org/problems/adjacents-are-not-allowed3528/1
 
 //Code:
+
+1. RECURSION: TLE :(
+
+class Solution{
+public:
+    int solve(int N,vector<vector<int>>& mat,int pos){
+        if(pos <= 0) return 0;
+        if(pos == 1) return max(mat[0][0],mat[1][0]);
+        return max(max(mat[0][pos-1],mat[1][pos-1]) + solve(N,mat,pos-2),solve(N,mat,pos-1));
+    }
+    int maxSum(int N, vector<vector<int>>& mat) {
+        return solve(N, mat, N);
+    }
+};
+____________________________________________________
+
+2. MEMO:
+
+class Solution{
+public:
+    vector<int> dp;
+    int solve(int N,vector<vector<int>>& mat,int pos){
+        if(pos <= 0) return 0;
+        if(dp[pos] != 0) return dp[pos];
+        if(pos == 1) return dp[pos]=max(mat[0][0], mat[1][0]);
+        return dp[pos]=max(max(mat[0][pos-1], mat[1][pos-1]) + solve(N,mat,pos-2),solve(N,mat,pos-1));
+    }
+    
+    int maxSum(int N,vector<vector<int>>& mat) {
+        dp.resize(N + 1, 0);
+        return solve(N, mat, N);
+    }
+};
+_________________________________________________
+3. BOTTOM UP DP:
+
+class Solution{
+public:
+    int maxSum(int N, vector<vector<int>>& mat) {
+        vector<int> dp(N + 1, 0);
+        dp[1] = max(mat[0][0], mat[1][0]);
+        for (int i = 2; i <= N; i++) {
+            dp[i] = max(max(mat[0][i-1],mat[1][i-1]) + dp[i-2],dp[i-1]);
+        }
+        return dp[N];
+    }
+};
+________________________________________________
+FIRST APPROACH:
+
 class Solution{
 public:
     int maxSum(int N, vector<vector<int>> mat)

@@ -1,0 +1,18 @@
+//Question: https://leetcode.com/problems/maximum-points-you-can-obtain-from-cards/description/
+
+//Code:
+class Solution {
+private:
+    int solve(vector<int>& c, int k, int li, int ri) {
+        if(k==0) return 0;
+        return max(c[li]+solve(c,k-1,li+1,ri),c[ri]+solve(c,k-1,li,ri-1));
+    }
+public:
+    int maxScore(vector<int>& cardPoints, int k) {
+        return solve(cardPoints,k,0,cardPoints.size()-1);
+    }
+};
+
+//TC: O(k^2)
+
+//Approach:  Recursion with Memo

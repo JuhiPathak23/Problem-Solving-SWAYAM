@@ -1,0 +1,58 @@
+//Question: https://leetcode.com/problems/solving-questions-with-brainpower/
+
+//Code:
+
+1. RECURSION: TLE :(((((:(
+
+class Solution {
+public:
+    long long solve(vector<vector<int>>& questions,int i){
+        int n=questions.size();
+        if(i>=n) return 0;
+        long long points=questions[i][1]+i<n? solve(questions, questions[i][1] + i+1) + questions[i][0]:questions[i][0];
+        return max(solve(questions, i+1), points);
+    }
+    long long mostPoints(vector<vector<int>>& questions) {
+        return solve(questions,0);
+    }
+};
+____________________________________________________
+
+2. MEMO:
+
+class Solution {
+public:
+    long long solve(vector<vector<int>>& questions,int i,vector<long long>&memo){
+        int n=questions.size();
+        if(i>=n) return 0;
+        if(memo[i]!=0) return memo[i];
+        long long points=questions[i][1] +i<n? solve(questions, questions[i][1]+i+1,memo) + questions[i][0] : questions[i][0];
+        memo[i]=max(solve(questions,i+1,memo), points);
+        return memo[i];
+    }
+    long long mostPoints(vector<vector<int>>& questions) {
+        int n=questions.size();
+        vector<long long>memo(n,0);
+        return solve(questions,0,memo);
+    }
+};
+
+__________________________________________________
+3. BOTTOM UP DP:
+
+class Solution {
+public:
+    long long mostPoints(vector<vector<int>>& questions) {
+        int n=questions.size();
+        vector<long long>dp(n+1,0);
+        for(int i=n-1;i >= 0;i--) {
+            long long points=questions[i][1]+i <n?dp[questions[i][1] +i+1] + questions[i][0]:questions[i][0];
+            dp[i]=max(dp[i+1],points);
+        }
+        return dp[0];
+    }
+};
+
+//TC: O(n)
+
+//Approach: DP

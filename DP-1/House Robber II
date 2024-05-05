@@ -1,0 +1,117 @@
+//Question: https://leetcode.com/problems/house-robber-ii/
+
+//Code:
+
+1. RECURSION: TLE :(
+
+class Solution {
+public:
+    int solve(vector<int>& nums){
+        int n=nums.size();
+        if (n==0) return 0;
+        if (n==1) return nums[0];
+        vector<int>first,last;
+        for (int i=0;i<n;i++){
+            if (i!=n-1) first.push_back(nums[i]);
+            if (i!=0)   last.push_back(nums[i]);
+        }
+        return max(calc(first), calc(last));
+    }
+    
+    int calc(vector<int>& nums){
+        int n=nums.size();
+        int a=0,b=nums[0],c;
+        for(int i=1;i<n;i++){
+            int include=a+nums[i];
+            int exclude=b;
+            c=max(include,exclude);
+            a=b;
+            b=c;
+        }
+        return b;
+    }
+
+    int rob(vector<int>& nums) {
+        return solve(nums);
+    }
+};
+____________________________________________________
+
+2. MEMO:
+
+class Solution {
+public:
+    int solve(vector<int>& nums) {
+        int n=nums.size();
+        if (n==0) return 0;
+        if (n==1) return nums[0];
+        vector<int> first, last;
+        for(int i = 0; i < n; i++) {
+            if (i != n - 1) first.push_back(nums[i]);
+            if (i != 0) last.push_back(nums[i]);
+        }
+        return max(calc(first), calc(last));
+    }
+    
+    int calc(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> memo(n + 1, -1);
+        return calcmemo(nums, n, memo);
+    }
+    
+    int calcmemo(vector<int>& nums, int n,vector<int>& memo) {
+        if (n == 0) return 0;
+        if (n == 1) return nums[0];
+        if (memo[n] != -1) return memo[n];
+        
+        int a = 0, b = nums[0], c;
+        for (int i = 1; i < n; i++) {
+            int include = a + nums[i];
+            int exclude = b;
+            c = max(include, exclude);
+            a = b;
+            b = c;
+        }
+        
+        return memo[n] = c;
+    }
+
+    int rob(vector<int>& nums) {
+        return solve(nums);
+    }
+};
+
+__________________________________________________
+3. BOTTOM UP DP:
+
+class Solution {
+public:
+    int solve(vector<int>& nums){
+        int n=nums.size();
+        if (n==0) return 0;
+        if (n==1) return nums[0];
+        vector<int> first, last;
+        for(int i = 0; i < n; i++) {
+            if (i!=n - 1) first.push_back(nums[i]);
+            if (i!= 0) last.push_back(nums[i]);
+        }
+        return max(calcDP(first),calcDP(last));
+    }
+    
+    int calcDP(vector<int>& nums) {
+        int n=nums.size();
+        if (n==0) return 0;
+        if (n==1) return nums[0];
+        vector<int> dp(n + 1, 0);
+        dp[1] = nums[0];
+        for (int i = 2; i <= n; i++)    dp[i]=max(nums[i - 1] + dp[i - 2], dp[i - 1]);
+        return dp[n];
+    }
+    int rob(vector<int>& nums) {
+        return solve(nums);
+    }
+};
+
+//TC: O(n)
+
+//Approach: DP

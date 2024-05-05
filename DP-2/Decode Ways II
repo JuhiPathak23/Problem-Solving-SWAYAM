@@ -1,0 +1,125 @@
+//Question: https://leetcode.com/problems/decode-ways-ii/description/
+
+//Code:
+1. RECURSION:
+
+typedef long long ll;
+class Solution {
+public:
+    ll M = 1e9+7;
+    ll solve(string &s, int i, vector<ll> &dp) {
+        if (i == s.size()) return 1;
+        if (i > s.size()) return 0;
+        
+        ll curr = 0;
+        if (s[i] == '*') {
+            curr += 9 * solve(s, i + 1, dp);
+            curr %= M;
+            if (i + 1 < s.size()) {
+                if (s[i + 1] == '*') curr += 15 * solve(s, i + 2, dp);
+                else if (s[i + 1] <= '6') curr += 2 * solve(s, i + 2, dp);
+                else curr += solve(s, i + 2, dp);
+            }
+        } else {
+            if (s[i] != '0') curr += solve(s, i + 1, dp);
+            if (s[i] == '1' && i + 1 < s.size()) {
+                if (s[i + 1] == '*') curr += 9 * solve(s, i + 2, dp);
+                else curr += solve(s, i + 2, dp);
+            }
+            if (s[i] == '2' && i + 1 < s.size()) {
+                if (s[i + 1] == '*') curr += 6 * solve(s, i + 2, dp);
+                else if (s[i + 1] <= '6') curr += solve(s, i + 2, dp);
+            }
+        }
+        return curr % M;
+    }
+
+    int numDecodings(string s) {
+        vector<ll> dp(s.size(), -1);
+        return solve(s, 0, dp);
+    }
+};
+_______________________________________________________
+2. MEMO:
+
+typedef long long ll;
+class Solution {
+public:
+    ll M = 1e9+7;
+
+    ll solve(string &s, int i, vector<ll> &dp) {
+        if (i == s.size()) return 1;
+        if (i > s.size()) return 0;
+        if (dp[i] != -1) return dp[i];
+        
+        ll curr = 0;
+        if (s[i] == '*') {
+            curr += 9 * solve(s, i + 1, dp);
+            curr %= M;
+            if (i + 1 < s.size()) {
+                if (s[i + 1] == '*') curr += 15 * solve(s, i + 2, dp);
+                else if (s[i + 1] <= '6') curr += 2 * solve(s, i + 2, dp);
+                else curr += solve(s, i + 2, dp);
+            }
+        } else {
+            if (s[i] != '0') curr += solve(s, i + 1, dp);
+            if (s[i] == '1' && i + 1 < s.size()) {
+                if (s[i + 1] == '*') curr += 9 * solve(s, i + 2, dp);
+                else curr += solve(s, i + 2, dp);
+            }
+            if (s[i] == '2' && i + 1 < s.size()) {
+                if (s[i + 1] == '*') curr += 6 * solve(s, i + 2, dp);
+                else if (s[i + 1] <= '6') curr += solve(s, i + 2, dp);
+            }
+        }
+        return dp[i] = curr % M;
+    }
+
+    int numDecodings(string s) {
+        vector<ll> dp(s.size(), -1);
+        return solve(s, 0, dp);
+    }
+};
+________________________________________________________________
+3. BOTTOM UP DP:
+
+typedef long long ll;
+class Solution {
+public:
+    ll M = 1e9+7;
+
+    int numDecodings(string s) {
+        ll nxt1 = 1, nxt2 = 1;
+        int n = s.size();
+        for (int i = n - 1; i >= 0; i--) {
+            ll curr = 0;
+            if (s[i] == '*') {
+                curr += 9 * nxt1;
+                curr %= M;
+                if (i + 1 < n) {
+                    if (s[i + 1] == '*') curr += 15 * nxt2;
+                    else if (s[i + 1] <= '6') curr += 2 * nxt2;
+                    else curr += nxt2;
+                }
+            } else {
+                if (s[i] != '0') curr += nxt1;
+                if (s[i] == '1' && i + 1 < n) {
+                    if (s[i + 1] == '*') curr += 9 * nxt2;
+                    else curr += nxt2;
+                }
+                if (s[i] == '2' && i + 1 < n) {
+                    if (s[i + 1] == '*') curr += 6 * nxt2;
+                    else if (s[i + 1] <= '6') curr += nxt2;
+                }
+            }
+            curr %= M;
+            nxt2 = nxt1;
+            nxt1 = curr;
+        }
+        return nxt1;
+    }
+};
+
+//TC: O(N)
+
+//Approach:  DP

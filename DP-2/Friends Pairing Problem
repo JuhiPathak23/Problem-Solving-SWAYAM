@@ -1,0 +1,67 @@
+//Question: https://www.geeksforgeeks.org/problems/friends-pairing-problem5425/1
+
+//Code:
+1. RECURSION:
+
+const int mod = 1e9+7;
+class Solution {
+private:
+    int solve(int n, vector<int>& dp) {
+        if (n <= 2) return n;
+        if (dp[n] != 0) return dp[n];
+        long long ans = ((solve(n - 1, dp) * 1LL % mod) + (((solve(n - 2, dp) * 1LL % mod) * (n - 1)) % mod)) % mod;
+        return dp[n] = ans;
+    }
+    
+public:
+    int countFriendsPairings(int n) {
+        vector<int> dp(n + 1, 0);
+        dp[1] = 1;
+        dp[2] = 2;
+        return solve(n, dp);
+    }
+};
+_______________________________________________________
+2. MEMO:
+
+const int mod = 1e9+7;
+class Solution {
+private:
+    int solve(int n, vector<int>& dp) {
+        if (n <= 2) return n;
+        if (dp[n] != 0) return dp[n];
+        long long ans = ((solve(n - 1, dp) * 1LL % mod) + (((solve(n - 2, dp) * 1LL % mod) * (n - 1)) % mod)) % mod;
+        return dp[n] = ans;
+    }
+    
+public:
+    int countFriendsPairings(int n) {
+        vector<int> dp(n + 1, 0);
+        dp[1] = 1;
+        dp[2] = 2;
+        return solve(n, dp);
+    }
+};
+________________________________________________________________
+3. BOTTOM UP DP:
+
+const int mod = 1e9+7;
+
+class Solution {
+public:
+    int countFriendsPairings(int n) { 
+        vector<int> dp(n + 1, 0);
+        dp[1] = 1;
+        dp[2] = 2;
+        for (int i = 3; i <= n; i++) {
+            long long ans = ((dp[i - 1] * 1LL % mod) + (((dp[i - 2] * 1LL % mod) * (i - 1)) % mod)) % mod;
+            dp[i] = ans;
+        }
+        return dp[n];
+    }
+};
+
+
+//TC: O(N)
+
+//Approach:  DP

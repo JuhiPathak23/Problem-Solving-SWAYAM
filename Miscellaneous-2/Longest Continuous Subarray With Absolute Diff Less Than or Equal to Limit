@@ -1,0 +1,42 @@
+//Question: https://leetcode.com/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit/description/
+
+//Code:
+class Solution {
+public:
+    int longestSubarray(vector<int>& nums, int limit) {
+        int res=0;
+        deque<int>high;
+        deque<int>low;
+        int l=0;
+        for(int r=0;r<nums.size();r++) {
+            while(!high.empty() && (nums[high.back()]<nums[r])) {
+                high.pop_back();
+            }
+            high.push_back(r);
+            while(!low.empty() && (nums[low.back()]>nums[r])){
+                low.pop_back();
+            }
+            low.push_back(r);
+            while(!high.empty() && !low.empty()){
+                int t=nums[high.front()]-nums[low.front()];
+                if(t>limit) {
+                    l=min(high.front(),low.front());
+                    l++;
+                    while(high.front()<l){
+                        high.pop_front();
+                    }
+                    while(low.front()<l){
+                        low.pop_front();
+                    }
+                }
+                else    break;
+            }
+            res=max(res,r-l+1);
+        }
+        return res;
+    }
+};
+
+//TC: O(n)
+
+//Approach:  Sliding window with deque

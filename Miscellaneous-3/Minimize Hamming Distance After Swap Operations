@@ -1,0 +1,39 @@
+//Question: https://leetcode.com/problems/minimize-hamming-distance-after-swap-operations/description/
+
+//Code:
+class Solution {
+public:
+    int find(vector<int>&v,int i){
+        return v[i]<0?i:v[i]=find(v,v[i]);
+    }
+    int minimumHammingDistance(vector<int>& source, vector<int>& target, vector<vector<int>>& allowedSwaps) {
+        int n=source.size(),res=0;
+        vector<int>v(n,-1);
+        for(auto &s:allowedSwaps){
+            int i=find(v,s[0]);
+            int j=find(v,s[1]);
+            if(i!=j){
+                if(v[i]>v[j])   swap(i,j);
+                v[i]+=v[j];
+                v[j]=i;
+            }
+        }
+        vector<unordered_multiset<int>>temp(n);
+        for(auto i=0;i<n;i++){
+            if(source[i]!=target[i])    temp[find(v,i)].insert(source[i]);
+        }
+        for(auto i=0;i<n;i++){
+            if(source[i]!=target[i]){
+                auto &c=temp[find(v,i)];
+                auto it=c.find(target[i]);
+                if(it!=end(c))  c.erase(it);
+                else    res++;
+            }
+        }
+        return res;
+    }
+};
+
+//TC: O(n* ack(n) +n), ack(n) is the Ackermann function
+
+//Approach:  DSU with multisets

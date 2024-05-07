@@ -1,0 +1,40 @@
+//Question: https://www.geeksforgeeks.org/problems/minimum-edges/1
+
+//Code:
+//User function Template for C++
+
+class Solution{
+    public:
+        int minimumEdgeReversal(vector<vector<int>> &edges,int n,int src,int dst)
+        {
+            vector<int>res(n+1,1e9);
+            vector<pair<int,int>>v[n+1];
+            for(int i=0;i<edges.size();i++){
+                v[edges[i][0]].push_back({edges[i][1],0});
+                v[edges[i][1]].push_back({edges[i][0],1});
+            }
+            priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>pq;
+            res[src]=0;
+            pq.push({0,src});
+            while(!pq.empty()){
+                auto t=pq.top();
+                int f=t.first;
+                int s=t.second;
+                pq.pop();
+                for(auto x:v[s]){
+                    int wt=x.second;
+                    int node=x.first;
+                    if(res[node]>wt+f){
+                        res[node]=wt+f;
+                        pq.push({wt+f,node});
+                    }
+                }
+            }
+            if(res[dst]>=1e9)return -1;
+            return res[dst];
+        }
+};
+
+//TC: O(V+E*log V)
+
+//Approach:  modified Dijkstra's algo

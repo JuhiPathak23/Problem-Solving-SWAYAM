@@ -66,4 +66,4 @@ public:
 _________________________________
 //TC: O(amount * c)
 
-//Approach:  modified Dijkstra's algo
+//Approach:  multiple

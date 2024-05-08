@@ -1,0 +1,79 @@
+//Question: https://leetcode.com/problems/coin-change-ii/description/
+
+//Code:
+1. RECURSION: tle :')
+
+long helper2(vector<int>& arr, int ind, int T) {
+        if (ind == 0)   
+            return (T % arr[0] == 0);
+        
+        long notTaken = helper2(arr, ind - 1, T);
+        long taken = 0;
+        if (arr[ind] <= T)
+            taken = helper2(arr, ind, T - arr[ind]);
+        return notTaken + taken;
+    }
+
+    long helper(vector<int>& arr, int n, int T) {
+        return helper2(arr, n - 1, T);
+    }
+    
+    int change(int amount, vector<int>& coins) {
+        int n = coins.size();
+        return helper(coins, n, amount);
+    }
+_________________________________
+2. MEMO:
+
+long helper2(vector<int>& arr, int ind, int T, vector<vector<long>>& dp) {
+        if (ind == 0)   
+            return (T % arr[0] == 0);
+        
+        if (dp[ind][T] != -1)   
+            return dp[ind][T];
+        
+        long notTaken = helper2(arr, ind - 1, T, dp);
+        long taken = 0;
+        if (arr[ind] <= T)
+            taken = helper2(arr, ind, T - arr[ind], dp);
+        return dp[ind][T] = notTaken + taken;
+    }
+
+    long helper(vector<int>& arr, int n, int T) {
+        vector<vector<long>> dp(n, vector<long>(T + 1, -1));
+        return helper2(arr, n - 1, T, dp);
+    }
+    
+    int change(int amount, vector<int>& coins) {
+        int n = coins.size();
+        return helper(coins, n, amount);
+    }
+_________________________________
+3. DP:
+
+class Solution {
+public:
+    long helper2(vector<int>& arr, int ind, int T,vector<vector<long>>& dp) {
+    if (ind == 0)   return (T % arr[0] == 0);
+    if (dp[ind][T] != -1)   return dp[ind][T];
+    long notTaken = helper2(arr, ind - 1, T, dp);
+    long taken = 0;
+    if (arr[ind] <= T)
+        taken = helper2(arr, ind, T - arr[ind], dp);
+    return dp[ind][T] = notTaken + taken;
+}
+
+    long helper(vector<int>& arr, int n, int T) {
+        vector<vector<long>> dp(n, vector<long>(T + 1, -1));
+        return helper2(arr, n - 1, T, dp);
+    }
+    int change(int amount, vector<int>& coins) {
+        int n = coins.size();
+        int res=helper(coins, n, amount);
+        return res;
+    }
+};
+_________________________________
+//TC: O(amount * n)
+
+//Approach:  multiple

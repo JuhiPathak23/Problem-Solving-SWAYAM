@@ -1,0 +1,138 @@
+//Question: https://leetcode.com/problems/maximum-subarray/description/
+
+//Code:
+1. RECURSION: tle :')
+
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        return maxSubArrayRecursive(nums, 0, nums.size() - 1);
+    }
+    
+    int maxSubArrayRecursive(vector<int>& nums, int left, int right) {
+        if (left == right)
+            return nums[left];
+        
+        int mid = left + (right - left) / 2;
+        
+        int leftSum = maxSubArrayRecursive(nums, left, mid);
+        int rightSum = maxSubArrayRecursive(nums, mid + 1, right);
+        int crossingSum = maxCrossingSum(nums, left, mid, right);
+        
+        return max(max(leftSum, rightSum), crossingSum);
+    }
+    
+    int maxCrossingSum(vector<int>& nums, int left, int mid, int right) {
+        int leftSum = INT_MIN;
+        int sum = 0;
+        for (int i = mid; i >= left; --i) {
+            sum += nums[i];
+            leftSum = max(leftSum, sum);
+        }
+        
+        int rightSum = INT_MIN;
+        sum = 0;
+        for (int i = mid + 1; i <= right; ++i) {
+            sum += nums[i];
+            rightSum = max(rightSum, sum);
+        }
+        
+        return leftSum + rightSum;
+    }
+};
+_________________________________
+2. MEMO:
+
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        vector<int> memo(nums.size(), INT_MIN);
+        return maxSubArrayMemo(nums, 0, nums.size() - 1, memo);
+    }
+    
+    int maxSubArrayMemo(vector<int>& nums, int left, int right, vector<int>& memo) {
+        if (left == right)
+            return nums[left];
+        
+        if (memo[left] != INT_MIN)
+            return memo[left];
+        
+        int mid = left + (right - left) / 2;
+        
+        int leftSum = maxSubArrayMemo(nums, left, mid, memo);
+        int rightSum = maxSubArrayMemo(nums, mid + 1, right, memo);
+        int crossingSum = maxCrossingSum(nums, left, mid, right);
+        
+        memo[left] = max(max(leftSum, rightSum), crossingSum);
+        return memo[left];
+    }
+    
+    int maxCrossingSum(vector<int>& nums, int left, int mid, int right) {
+        int leftSum = INT_MIN;
+        int sum = 0;
+        for (int i = mid; i >= left; --i) {
+            sum += nums[i];
+            leftSum = max(leftSum, sum);
+        }
+        
+        int rightSum = INT_MIN;
+        sum = 0;
+        for (int i = mid + 1; i <= right; ++i) {
+            sum += nums[i];
+            rightSum = max(rightSum, sum);
+        }
+        
+        return leftSum + rightSum;
+    }
+};
+
+_________________________________
+3. DP:
+
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        vector<int> memo(nums.size(), INT_MIN);
+        return maxSubArrayMemo(nums, 0, nums.size() - 1, memo);
+    }
+    
+    int maxSubArrayMemo(vector<int>& nums, int left, int right, vector<int>& memo) {
+        if (left == right)
+            return nums[left];
+        
+        if (memo[left] != INT_MIN)
+            return memo[left];
+        
+        int mid = left + (right - left) / 2;
+        
+        int leftSum = maxSubArrayMemo(nums, left, mid, memo);
+        int rightSum = maxSubArrayMemo(nums, mid + 1, right, memo);
+        int crossingSum = maxCrossingSum(nums, left, mid, right);
+        
+        memo[left] = max(max(leftSum, rightSum), crossingSum);
+        return memo[left];
+    }
+    
+    int maxCrossingSum(vector<int>& nums, int left, int mid, int right) {
+        int leftSum = INT_MIN;
+        int sum = 0;
+        for (int i = mid; i >= left; --i) {
+            sum += nums[i];
+            leftSum = max(leftSum, sum);
+        }
+        
+        int rightSum = INT_MIN;
+        sum = 0;
+        for (int i = mid + 1; i <= right; ++i) {
+            sum += nums[i];
+            rightSum = max(rightSum, sum);
+        }
+        
+        return leftSum + rightSum;
+    }
+};
+
+_________________________________
+//TC: O(n)
+
+//Approach:  multiple

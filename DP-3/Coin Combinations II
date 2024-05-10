@@ -1,0 +1,67 @@
+//Question: https://cses.fi/problemset/task/1636
+
+//Code:
+RECURSION:
+#include <iostream>
+#include <vector>
+using namespace std;
+const int MOD = 1000000007;
+int numberOfWaysRecursion(vector<int>& coins, int x, int index) {
+    if (x == 0) return 1; 
+    if (x < 0 || index < 0) return 0; 
+    int includeCoin = 0, excludeCoin = 0;
+    if (coins[index] <= x) {
+        includeCoin = numberOfWaysRecursion(coins, x - coins[index], index); 
+    }
+    excludeCoin = numberOfWaysRecursion(coins, x, index - 1); 
+    return (includeCoin + excludeCoin) % MOD;
+}
+int numberOfWaysRecursionWrapper(vector<int>& coins, int x) {
+    int n = coins.size();
+    return numberOfWaysRecursion(coins, x, n - 1);
+}
+______________________________________
+
+MEMOIZATION:
+#include <iostream>
+#include <vector>
+using namespace std;
+const int MOD = 1000000007;
+int numberOfWaysMemo(vector<int>& coins, int x, int index, vector<vector<int>>& memo) {
+    if (x == 0) return 1;
+    if (x < 0 || index < 0) return 0; 
+    if (memo[index][x] != -1) return memo[index][x];
+    int includeCoin = 0, excludeCoin = 0;
+    if (coins[index] <= x) {
+        includeCoin = numberOfWaysMemo(coins, x - coins[index], index, memo);
+    }
+    excludeCoin = numberOfWaysMemo(coins, x, index - 1, memo);
+    memo[index][x] = (includeCoin + excludeCoin) % MOD;
+    return memo[index][x];
+}
+
+int numberOfWaysMemoWrapper(vector<int>& coins, int x) {
+    int n = coins.size();
+    vector<vector<int>> memo(n, vector<int>(x + 1, -1));
+    return numberOfWaysMemo(coins, x, n - 1, memo);
+}
+___________________________________
+DP:
+#include <iostream>
+#include <vector>
+using namespace std;
+const int MOD = 1000000007;
+int numberOfWaysDP(vector<int>& coins, int x) {
+    int n = coins.size();
+    vector<int> dp(x + 1, 0);
+    dp[0] = 1;
+    for (int i = 0; i < n; i++) {
+        for (int j = coins[i]; j <= x; j++) {
+            dp[j] = (dp[j] + dp[j - coins[i]]) % MOD;
+        }
+    }
+    return dp[x];
+}
+_________________________________
+
+//Approach:  multiple

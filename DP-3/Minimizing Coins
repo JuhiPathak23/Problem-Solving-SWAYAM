@@ -1,0 +1,65 @@
+//Question: https://cses.fi/problemset/task/1634
+
+//Code:
+RECURSION:
+#include <iostream>
+#include <vector>
+#include <climits>
+using namespace std;
+int minCoinsRecursion(vector<int>& coins, int x, int index) {
+    if (x == 0) return 0;
+    if (x < 0 || index < 0) return INT_MAX;
+    int includeCoin = INT_MAX, excludeCoin = INT_MAX;
+    if (coins[index] <= x) {
+        includeCoin = 1 + minCoinsRecursion(coins, x - coins[index], index);
+    }
+    excludeCoin = minCoinsRecursion(coins, x, index - 1);
+    return min(includeCoin, excludeCoin);
+}
+int minCoinsRecursionWrapper(vector<int>& coins, int x) {
+    int n = coins.size();
+    return minCoinsRecursion(coins, x, n - 1);
+}
+
+MEMOIZATION:
+#include <iostream>
+#include <vector>
+#include <climits>
+using namespace std;
+int minCoinsMemo(vector<int>& coins, int x, int index, vector<vector<int>>& memo) {
+    if (x == 0) return 0;
+    if (x < 0 || index < 0) return INT_MAX;
+    if (memo[index][x] != -1) return memo[index][x];
+    int includeCoin = INT_MAX, excludeCoin = INT_MAX;
+    if (coins[index] <= x) {
+        includeCoin = 1 + minCoinsMemo(coins, x - coins[index], index, memo);
+    }
+    excludeCoin = minCoinsMemo(coins, x, index - 1, memo);
+    memo[index][x] = min(includeCoin, excludeCoin);
+    return memo[index][x];
+}
+int minCoinsMemoWrapper(vector<int>& coins, int x) {
+    int n = coins.size();
+    vector<vector<int>> memo(n, vector<int>(x + 1, -1));
+    return minCoinsMemo(coins, x, n - 1, memo);
+}
+
+DP:
+#include <iostream>
+#include <vector>
+#include <climits>
+using namespace std;
+int minCoinsDP(vector<int>& coins, int x) {
+    int n = coins.size();
+    vector<int> dp(x + 1, INT_MAX);
+    dp[0] = 0; 
+    for (int i = 1; i <= x; i++) {
+        for (int j = 0; j < n; j++) {
+            if (coins[j] <= i && dp[i - coins[j]] != INT_MAX)  dp[i] = min(dp[i], dp[i - coins[j]] + 1);
+        }
+    }   
+    return dp[x] == INT_MAX ? -1 : dp[x];
+}
+_________________________________
+
+//Approach:  multiple

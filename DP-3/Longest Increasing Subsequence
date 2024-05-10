@@ -1,0 +1,83 @@
+//Question: https://leetcode.com/problems/longest-increasing-subsequence/description/
+
+//Code:
+class Solution {
+public:
+    /* RECURSION:
+
+    int solve(int i,int prev,vector<int>&v){
+        if(i==v.size()) return 0;
+        int include=0;
+        int exclude=solve(i+1,prev,v);
+        if(prev==-1 || v[i]>v[prev])    
+            include=1+solve(i+1,i,v);
+        return max(include,exclude);
+    }
+    int lengthOfLIS(vector<int>& nums) {
+        int res=solve(0,-1,nums);
+        return res;
+    }*/
+
+    /* MEMOIZATION:
+
+    int lis=1;
+    int solve(vector<int>&v,int i,int n,vector<int>&dp){
+        if(i==n){
+            dp[i]=1;
+            return i;
+        }
+        if(dp[i]!=0)    return i;
+        int c=0;
+        for(int j=i+1;j<=n;j++){
+            int k=solve(v,j,n,dp);
+            if(v[i]<v[k])   c=max(c,dp[k]);
+        }
+        dp[i]=c+1;
+        lis=max(lis,dp[i]);
+        return i;
+    }
+    int lengthOfLIS(vector<int>& nums) {
+        int n=nums.size();
+        vector<int>dp(n);
+        solve(nums,0,n-1,dp);
+        return lis;
+    }*/
+
+/* DP:
+    int lengthOfLIS(vector<int>& nums) {
+        if(nums.size()==0)    return 0;
+        int n=nums.size();
+        vector<int>dp(n);
+        dp[0]=1;
+        int res=1; 
+        for(int i=1;i<n;i++){
+            int lis=0; 
+            for(int j=0;j<i;j++) {
+                if(nums[i]>nums[j]) lis=max(lis,dp[j]); 
+            }
+            dp[i]=lis+1; 
+            res=max(res,dp[i]);
+        }
+        return res;
+    }*/
+
+    int lengthOfLIS(vector<int>& nums) {
+        if(nums.size()==0) return 0;
+        vector<int>v(nums.size(), 0);
+        int lis=0;
+        for(int n:nums) {
+            int low=0,high=lis;
+            while(low<high){
+                int mid=low + (high-low)/2;
+                if(v[mid]<n)    low=mid+1;
+                else    high=mid;
+            }
+            v[low]=n;
+            if(low==lis)  lis++;
+        }
+        return lis;
+    }
+};
+_________________________________
+
+//Approach:  multiple

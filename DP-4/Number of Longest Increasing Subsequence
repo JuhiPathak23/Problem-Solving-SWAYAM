@@ -1,0 +1,32 @@
+//Question: https://leetcode.com/problems/number-of-longest-increasing-subsequence/description/
+
+//Code:
+class Solution {
+public:
+    int findNumberOfLIS(vector<int>& nums) {
+        int res=0,n =nums.size();
+        vector<int>v(n,1);
+        vector<int>a(n,1);
+        int c=1;
+        for(int i=1;i<n;i++){
+            for(int j=0;j<i;j++){
+                if(nums[i]>nums[j]){
+                    if(v[j]+1>v[i]){
+                        v[i]=v[j]+1;
+                        a[i]=a[j];
+                    }
+                    else if(v[j]+1==v[i])   a[i]+=a[j];
+                }
+                c=max(c,v[i]);
+            }
+        }
+        for(int i=0;i<n;i++){
+            if(v[i]==c) res+=a[i];
+        }
+        return res;
+    }
+};
+
+//TC: O(N*N)
+
+//Approach:  DP

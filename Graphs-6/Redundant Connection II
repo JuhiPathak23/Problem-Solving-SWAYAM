@@ -1,0 +1,53 @@
+//Question: https://leetcode.com/problems/redundant-connection-ii/description/
+
+//Code:
+class Solution {
+public:
+    int find(int u,vector<int> &parent){
+        if(parent[u]<0) return u;
+        parent[u]=find(parent[u],parent);
+        return parent[u];
+    }
+
+    bool helper(int u,int v,vector<int> &parent) {
+        int x=find(u,parent);
+        int y=find(v,parent);
+        if(x==y)  return 0;
+        if(parent[x]<parent[y]) {
+            parent[x]+=parent[y];
+            parent[y]=x;   
+        }
+        else {
+            parent[y]+=parent[x];
+            parent[x]=y;
+        }
+        return 1;
+    }
+
+    vector<int> findRedundantDirectedConnection(vector<vector<int>>& edges) {
+        int n=edges.size();
+        vector<int> parent(n+1,-1);
+        vector<int> v(n+1,-1);
+        int i=-1,j=-1;
+        for(int k=0;k<n;k++){
+            if(v[edges[k][1]]!=-1){         
+                j=v[edges[k][1]];
+                i=k;
+                break;
+            }
+            v[edges[k][1]]=k;    
+        }
+        for(int k=0;k<n;k++){
+            if(k==i)  continue;
+            if(!helper(edges[k][0],edges[k][1],parent)){
+                if(i!=-1)  return edges[j];
+                else    return edges[k];
+            }
+        }
+        return edges[i];
+    }
+};
+
+//TC: O(N+ E)
+
+//Approach:  DSU

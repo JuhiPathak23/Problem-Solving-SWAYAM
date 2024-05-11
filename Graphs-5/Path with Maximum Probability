@@ -1,0 +1,36 @@
+//Question: https://leetcode.com/problems/path-with-maximum-probability/description/
+
+//Code:
+class Solution {
+public:
+    double maxProbability(int n, vector<vector<int>>& edges, vector<double>& succProb, int start_node, int end_node) {
+        vector<vector<pair<int, double>>> graph(n);
+        for (int i = 0; i < edges.size(); i++) {
+            int a = edges[i][0];
+            int b = edges[i][1];
+            double w = -log(succProb[i]);
+            graph[a].push_back({b, w});
+            graph[b].push_back({a, w});
+        }
+        vector<double>v(n, numeric_limits<double>::max());
+        v[start_node] = 0;
+        priority_queue<pair<double, int>, vector<pair<double, int>>, greater<>>pq;
+        pq.push({0, start_node});
+        while (!pq.empty()) {
+            auto [d, u] = pq.top();
+            pq.pop();
+            if (d > v[u])   continue;
+            for (auto [val, wt] : graph[u]) {
+                if (v[val] > v[u] + wt) {
+                    v[val] = v[u] + wt;
+                    pq.push({v[val], val});
+                }
+            }
+        }
+        return v[end_node] == numeric_limits<double>::max() ? 0 : exp(-v[end_node]);
+    }
+};
+
+//TC: O(E*log V)
+
+//Approach:  greedy

@@ -1,0 +1,34 @@
+//Question: https://leetcode.com/problems/cheapest-flights-within-k-stops/description/
+
+//Code:
+class Solution {
+public:
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
+        queue<pair<int,pair<int,int>>>q;
+        vector<int>res(n,1e9);
+        q.push({0,{0,src}});
+        vector<vector<pair<int,int>>>v(n+1);
+        for(int i=0;i<flights.size();i++){
+            v[flights[i][0]].push_back({flights[i][1],flights[i][2]});
+        }
+        while(q.empty()==false){
+            auto x=q.front();
+            int stop=x.first;
+            int dis=x.second.first;
+            int node=x.second.second;
+            q.pop();
+            if(stop>k) continue;
+            for(auto i:v[node]){
+                if(dis+i.second<res[i.first] && stop<=k){
+                    res[i.first]=dis+i.second;
+                    q.push({stop+1,{res[i.first],i.first}});   
+                }   
+            }
+        }
+        if(res[dst]==1e9) return -1;
+        return res[dst];
+    }
+};
+//TC: O(V*E)
+
+//Approach:  BFS

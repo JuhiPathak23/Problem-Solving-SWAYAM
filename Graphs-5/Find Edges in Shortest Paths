@@ -1,0 +1,44 @@
+//Question: https://leetcode.com/problems/find-edges-in-shortest-paths/description/
+
+//Code:
+class Solution {
+public:
+    vector<bool> findAnswer(int n, vector<vector<int>>& edges) {
+        vector<bool> res(edges.size());
+        vector<vector<array<int,2>>>graph(n);
+        for (int i = 0; i < edges.size(); ++i) {
+            graph[edges[i][0]].push_back({edges[i][1], i});
+            graph[edges[i][1]].push_back({edges[i][0], i});
+        }
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
+        vector<int>v(n, INT_MAX);    
+        pq.push({0, 0});
+        v[0] = 0;
+        while(!pq.empty()) {
+            auto [l, i] = pq.top(); pq.pop();
+            if (l == v[i]){
+                for (auto [j, e] : graph[i]){
+                    if (l + edges[e][2] < v[j]) {
+                        v[j] = l + edges[e][2];
+                        pq.push({v[j], j});
+                    }
+                }
+            }
+        }
+        pq.push({v[n - 1], n - 1});
+        while (!pq.empty()) {
+            auto [l, i] = pq.top(); pq.pop();
+            for (auto [j, e] : graph[i]){
+                if (l - edges[e][2] == v[j]) {
+                    res[e] = true;
+                    pq.push({v[j], j});
+                }
+            }
+        }
+        return res;
+    }
+};
+
+//TC: O(E* log V)
+
+//Approach:  Dijkstra's

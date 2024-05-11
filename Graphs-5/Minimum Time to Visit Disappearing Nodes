@@ -1,0 +1,39 @@
+//Question: https://leetcode.com/problems/minimum-time-to-visit-disappearing-nodes/description/
+
+//Code:
+class Solution {
+public:
+    vector<int> minimumTime(int n, vector<vector<int>>& edges, vector<int>& disappear) {
+        vector<int>v(n,-1);
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>pq;
+        unordered_map<int,vector<pair<int,int>>>mp;
+        for(auto& x:edges){
+            int u =x[0], v=x[1], t=x[2];
+            mp[u].push_back({v,t});
+            mp[v].push_back({u,t});
+        }
+        
+        pq.push({0,0});
+        while(!pq.empty()){
+            auto temp=pq.top();
+            pq.pop();
+            int t1=temp.first,t2=temp.second;
+            if(v[t2]!=-1) continue;
+            v[t2]=t1;
+            if(mp.find(t2)!=mp.end()){
+                for(auto& s:mp[t2]){
+                    int s1=s.first;
+                    int s2=s.second;
+                    if(v[s1]==-1 && t1+s2<disappear[s1]){
+                        pq.push({t1+s2,s1});
+                    }
+                }
+            }
+        }
+        return v;
+    }
+};
+
+//TC: O(E*log V)
+
+//Approach:  greedy

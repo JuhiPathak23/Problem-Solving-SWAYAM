@@ -1,0 +1,71 @@
+//Question: https://leetcode.com/problems/edit-distance/description/
+
+//Code:
+class Solution {
+public:
+    /* RECURSION+MEMO
+    _________________
+    int helper(string& word1, string& word2, int i, int j, vector<vector<int>>& memo) {
+        if (i==0) return j; 
+        if (j==0) return i; 
+        if (memo[i-1][j-1]!=-1) return memo[i-1][j-1];      
+        if (word1[i-1] == word2[j-1]) {
+            memo[i-1][j-1] = helper(word1, word2, i - 1, j - 1, memo);
+        } else {
+            int opinsert=helper(word1, word2, i, j - 1, memo);
+            int opdelete=helper(word1, word2, i - 1, j, memo);
+            int opreplace=helper(word1, word2, i - 1, j - 1, memo);
+            memo[i-1][j-1] = 1 + min(opinsert,min(opdelete, opreplace));
+        }
+        return memo[i-1][j-1];
+    }
+    int minDistance(string word1, string word2) {
+        int m= word1.size();
+        int n= word2.size();
+        vector<vector<int>> memo(m, vector<int>(n,-1));
+        return helper(word1, word2, m, n, memo);
+    }*/
+
+    /* DP:
+    ______________
+    int minDistance(string word1, string word2) {
+        int m= word1.size();
+        int n= word2.size();
+        vector<vector<int>> dp(m+ 1, vector<int>(n+1, 0));
+        for (int i=0;i<=m;i++)  dp[i][0] = i;
+        for (int j=0;j<=n;j++)  dp[0][j] = j;
+        for (int i=1;i<=m;i++) {
+            for (int j=1;j<=n;j++) {
+                if (word1[i-1]==word2[j-1]) dp[i][j] = dp[i-1][j-1];
+                else    dp[i][j] = 1 + min(dp[i-1][j], min(dp[i][j-1], dp[i-1][j-1]));
+            }
+        }
+        return dp[m][n];
+    }*/
+
+    /*DP SPACE OPTIMIZED:
+    ____________________*/
+    
+    int minDistance(string word1, string word2) {
+        int m= word1.size();
+        int n= word2.size();
+        if (m==0) return n;
+        if (n==0) return m;
+        vector<int> dp(n+1, 0);
+        for (int j=0;j<=n;j++)    dp[j] = j;
+        int prev;
+        for (int i=1;i<=m;i++) {
+            prev=dp[0];
+            dp[0] = i;
+            for (int j=1;j<=n;j++) {
+                int temp = dp[j];
+                if (word1[i-1]==word2[j-1]) dp[j] = prev;
+                else    dp[j] = 1 + min(dp[j],min(dp[j-1], prev));
+                prev = temp;
+            }
+        }
+        return dp[n];
+    }
+};
+
+//Approach:  multiple approaches
